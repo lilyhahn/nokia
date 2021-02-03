@@ -160,6 +160,8 @@ MonoBehaviour:
   cooldown: 1
   finalCooldown: 0.5
   nextFire: 0
+  bullet: {fileID: 3706861366753846976, guid: 18d6b009ef298dd4eb741685258477d8, type: 3}
+  bulletSpeed: {x: 5, y: 5}
 --- !u!61 &1716987273
 BoxCollider2D:
   m_ObjectHideFlags: 0

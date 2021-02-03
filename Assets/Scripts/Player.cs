@@ -31,6 +31,10 @@ public class Player : MonoBehaviour
 
     protected GameManager gameManager;
 
+    public Bullet bullet;
+
+    public Vector2 bulletSpeed = new Vector2(5, 5);
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,15 +69,15 @@ public class Player : MonoBehaviour
         velocity = velocity.normalized * moveSpeed;
         GetComponent<Rigidbody2D>().velocity = velocity;
         if (velocity == Vector2.zero) {
-            GetComponent<Animator>().SetTrigger("idle");
+            //GetComponent<Animator>().SetTrigger("idle");
         }
         if (Input.GetAxis("Vertical") != 0) {
-            GetComponent<Animator>().SetInteger("direction", (int)Mathf.Sign(Input.GetAxis("Vertical")));
-            GetComponent<Animator>().SetTrigger("move");
+            //GetComponent<Animator>().SetInteger("direction", (int)Mathf.Sign(Input.GetAxis("Vertical")));
+            //GetComponent<Animator>().SetTrigger("move");
         }
         if (Input.GetAxis("Horizontal") != 0) {
             //GetComponent<Animator>().SetInteger("direction", 1);
-            GetComponent<Animator>().SetTrigger("move");
+            //GetComponent<Animator>().SetTrigger("move");
         }
         float v = Input.GetAxisRaw("Vertical");
         float h = Input.GetAxisRaw("Horizontal");
@@ -81,16 +85,16 @@ public class Player : MonoBehaviour
             transform.eulerAngles = new Vector3(0, 0, transform.eulerAngles.z - (transform.eulerAngles.z % 45));
         }
         if (h > 0 && v == 0) {
-            if (GetComponent<Animator>().GetInteger("direction") > 0)
-                transform.eulerAngles = new Vector3(0, 0, -90 * Mathf.Sign(Input.GetAxis("Horizontal")));
-            else if (GetComponent<Animator>().GetInteger("direction") < 0)
-                transform.eulerAngles = new Vector3(0, 0, 90 * Mathf.Sign(Input.GetAxis("Horizontal")));
+            //if (GetComponent<Animator>().GetInteger("direction") > 0)
+            //    transform.eulerAngles = new Vector3(0, 0, -90 * Mathf.Sign(Input.GetAxis("Horizontal")));
+            //else if (GetComponent<Animator>().GetInteger("direction") < 0)
+            //    transform.eulerAngles = new Vector3(0, 0, 90 * Mathf.Sign(Input.GetAxis("Horizontal")));
         }
         else if (h < 0 && v == 0) {
-            if (GetComponent<Animator>().GetInteger("direction") > 0)
-                transform.eulerAngles = new Vector3(0, 0, -90 * Mathf.Sign(Input.GetAxis("Horizontal")));
-            else if (GetComponent<Animator>().GetInteger("direction") < 0)
-                transform.eulerAngles = new Vector3(0, 0, 90 * Mathf.Sign(Input.GetAxis("Horizontal")));
+            //if (GetComponent<Animator>().GetInteger("direction") > 0)
+            //    transform.eulerAngles = new Vector3(0, 0, -90 * Mathf.Sign(Input.GetAxis("Horizontal")));
+            //else if (GetComponent<Animator>().GetInteger("direction") < 0)
+            //    transform.eulerAngles = new Vector3(0, 0, 90 * Mathf.Sign(Input.GetAxis("Horizontal")));
         }
         if (h == 0 && v > 0) {
             transform.rotation = Quaternion.identity;
@@ -138,7 +142,10 @@ public class Player : MonoBehaviour
     }
     
     void Fire(){
-
+        Bullet b = Instantiate(bullet) as Bullet;
+        Vector2 vvector = transform.up;
+        vvector.Scale(bulletSpeed);
+        b.GetComponent<Rigidbody2D>().velocity = vvector;
     }
 
     public void UpdateScore(int scoreAmount){
