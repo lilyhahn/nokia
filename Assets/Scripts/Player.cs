@@ -142,8 +142,10 @@ public class Player : MonoBehaviour
     }
     
     void Fire(){
-        Bullet b = Instantiate(bullet) as Bullet;
+        Bullet b = Instantiate(bullet, transform.position, Quaternion.identity) as Bullet;
         Vector2 vvector = transform.up;
+        if(Mathf.Abs(Input.GetAxis("Vertical")) > 0)
+            vvector = new Vector2(vvector.x, vvector.y * Input.GetAxis("Vertical"));
         vvector.Scale(bulletSpeed);
         b.GetComponent<Rigidbody2D>().velocity = vvector;
     }

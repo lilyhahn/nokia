@@ -32,9 +32,9 @@ public class Bullet : MonoBehaviour
         Vector2 velocity = currentVelocity;
         Vector2 reflectAxis = collision.transform.up;
         Vector2 reflectedVelocity = Vector2.Reflect(velocity, reflectAxis);
-        Debug.Log("Current Velocity: " + velocity);
-        Debug.Log("Reflection Axis: " + reflectAxis);
-        Debug.Log("Reflected Velocity: " + reflectedVelocity);
+        //Debug.Log("Current Velocity: " + velocity);
+        //Debug.Log("Reflection Axis: " + reflectAxis);
+        //Debug.Log("Reflected Velocity: " + reflectedVelocity);
         GetComponent<Rigidbody2D>().velocity = reflectedVelocity;
         inCollision = false;
     }
