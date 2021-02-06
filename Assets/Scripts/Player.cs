@@ -12,9 +12,9 @@ public class Player : MonoBehaviour
 {
     int score;
 
-    int health;
+    int health = 100;
 
-    bool movesAllowed = true;
+    //bool movesAllowed = true;
 
     public float moveSpeed = 2f;
     public float maxSpeed = 5f;
@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     public Bullet bullet;
 
     public Vector2 bulletSpeed = new Vector2(5, 5);
+
+    public float bulletSpawnOffset = 2f;
 
     // Start is called before the first frame update
     void Start()
@@ -86,13 +88,13 @@ public class Player : MonoBehaviour
         }
         if (h > 0 && v == 0) {
             //if (GetComponent<Animator>().GetInteger("direction") > 0)
-            //    transform.eulerAngles = new Vector3(0, 0, -90 * Mathf.Sign(Input.GetAxis("Horizontal")));
+                transform.eulerAngles = new Vector3(0, 0, -90 * Mathf.Sign(Input.GetAxis("Horizontal")));
             //else if (GetComponent<Animator>().GetInteger("direction") < 0)
             //    transform.eulerAngles = new Vector3(0, 0, 90 * Mathf.Sign(Input.GetAxis("Horizontal")));
         }
         else if (h < 0 && v == 0) {
             //if (GetComponent<Animator>().GetInteger("direction") > 0)
-            //    transform.eulerAngles = new Vector3(0, 0, -90 * Mathf.Sign(Input.GetAxis("Horizontal")));
+                transform.eulerAngles = new Vector3(0, 0, -90 * Mathf.Sign(Input.GetAxis("Horizontal")));
             //else if (GetComponent<Animator>().GetInteger("direction") < 0)
             //    transform.eulerAngles = new Vector3(0, 0, 90 * Mathf.Sign(Input.GetAxis("Horizontal")));
         }
@@ -119,35 +121,39 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!dead && !gameManager.paused) {
-            if(movesAllowed){
+        if (!dead) {
+            if(gameManager.timePaused){
                 Move();
             }
-            if (Input.GetButtonDown("Fire")) {
+            if (gameManager.timePaused && Input.GetButtonDown("Fire")) {
                 Fire();
             }
             if(Input.GetButtonDown("Switch Turn")){
-                if(movesAllowed == true){
-                    endTurn();
-                }
-                else{
-                    startTurn();
-                }
+                gameManager.toggleTime();
+            }
+            if (!gameManager.timePaused)
+            {
+                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             }
         }
     }
 
-    void Kill(){
-
+    void Kill(){ 
+        Debug.LogError("You Died");
     }
     
     void Fire(){
-        Bullet b = Instantiate(bullet, transform.position, Quaternion.identity) as Bullet;
         Vector2 vvector = transform.up;
-        if(Mathf.Abs(Input.GetAxis("Vertical")) > 0)
+        float offset = bulletSpawnOffset;
+        if (Mathf.Abs(Input.GetAxis("Vertical")) > 0) {
             vvector = new Vector2(vvector.x, vvector.y * Input.GetAxis("Vertical"));
+            offset *= Input.GetAxis("Vertical");
+        }
+        Bullet b = Instantiate(bullet, transform.position + transform.up * offset, Quaternion.identity) as Bullet;
+        
         vvector.Scale(bulletSpeed);
-        b.GetComponent<Rigidbody2D>().velocity = vvector;
+        //b.GetComponent<Rigidbody2D>().velocity = vvector;
+        b.InitializeVelocity(vvector);
     }
 
     public void UpdateScore(int scoreAmount){
@@ -155,17 +161,19 @@ public class Player : MonoBehaviour
     }
 
     public void UpdateHealth(int healthAmount){
-        health += healthAmount;
+        health -= healthAmount;
         if(health <= 0){
             Kill();
         }
     }
 
-    public void startTurn(){
-        movesAllowed = true;
-    }
+    //public void startTurn(){
+    //    movesAllowed = true;
+    //}
 
-    public void endTurn(){
-        movesAllowed = false;
-    }
+    //public void endTurn(){
+    //    movesAllowed = false;
+    //}
+
+
 }
